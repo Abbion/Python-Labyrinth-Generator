@@ -38,3 +38,6 @@
 8. Wygenerowanie labiryntu o wymiarach 13 na 17, wejście i wyjście w dowolnych miejscach, wyszukanie ścieżki przez punkt pośredni wskazany przez prowadzącego. Wygenerowanie labiryntu o wymiarach 13 na 17, dodanie dwóch punktów pośrednich wskazanych przez prowadzącego, usunięcie pierwszego, dodanie kolejnego. Oczekiwane znalezienie właściwej ścieżki.
 
 9. Próba wyszukania ścieżki przez pole będące ścianą - oczekiwane niepowodzenie przy próbie dodania punktu pośredniego
+
+
+### Link do reozytorium -> [Named Link](https://github.com/Abbion/Python-Labyrinth-Generator "Link")
