@@ -40,4 +40,4 @@
 9. Próba wyszukania ścieżki przez pole będące ścianą - oczekiwane niepowodzenie przy próbie dodania punktu pośredniego
 
 
-### Link do reozytorium -> [Named Link](https://github.com/Abbion/Python-Labyrinth-Generator "Link")
+### Link do reozytorium -> [Link](https://github.com/Abbion/Python-Labyrinth-Generator "Link")
