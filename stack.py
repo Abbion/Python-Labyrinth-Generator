@@ -1,29 +1,25 @@
-class stack:
+class Stack:
     def __init__(self):
-        self.arr = []
+        self.st = []
 
     def push(self, val_1, val_2):
-        self.arr.append((val_1, val_2))
-
-    def clear(self):
-        self.arr = []
-
-    def size(self):
-        return len(self.arr)
+        self.st.append((val_1, val_2))
 
     def pop(self):
-        if len(self.arr) != 0:
-            return self.arr.pop()
+        if len(self.st) != 0:
+            return self.st.pop()
         else:
             return [-1]
 
-    def inv_pop(self):
-        if len(self.arr) != 0:
-            return self.arr.pop(0)
-        else:
-            return [-1]
+    def clear(self):
+        self.st = []
 
-    def print(self):
-        for i in self.arr:
-            print(i, end=' ')
-        print()
+    def size(self):
+        return len(self.st)
+
+    def __str__(self):
+        str = ""
+        for i in self.st:
+            str += "({0} , {1}), ".format(i[0], i[1])
+        str += "\n"
+        return str
