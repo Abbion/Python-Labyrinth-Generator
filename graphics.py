@@ -15,12 +15,6 @@ class Graphics(tk.Frame):
         self.__windowSize = (1000, 800)
         self.renderReady = True
 
-        self.ss_x = 0
-        self.ss_y = 0
-
-        self.se_x = 0
-        self.se_y = 0
-
         self.gs_x = -1
         self.gs_y = -1
 
@@ -30,8 +24,8 @@ class Graphics(tk.Frame):
         self.gp_x = -1
         self.gp_y = -1
 
-        self.__setUpGUI()
-        self.__LabirynthSetUp()
+        self.__set_up_GUI()
+        self.__labirynth_set_up()
 
         self.generator = gn.Generator()
         self.generator.set_up_generator(self.guiHandler.rowValue, self.guiHandler.columnValue)
@@ -42,9 +36,8 @@ class Graphics(tk.Frame):
         self.labyrinth = self.generator.get_labyrinth()
         self.points = []
 
-        self.lab_map = []
-
-    def __setUpGUI(self):
+    def __set_up_GUI(self):
+        #Ustawienie GUI
         nextYpos = self.__GUIyStart
         self.pack(fill=tk.BOTH, expand=1)
         self.GUIcanvas = tk.Canvas(self, bd = 0)
@@ -93,15 +86,12 @@ class Graphics(tk.Frame):
 
         self.guiHandler = gh.GuiHandler(self)
 
-
-    def __LabirynthSetUp(self):
+    def __labirynth_set_up(self):
         self.LabCanvas = tk.Canvas(self, bd = 0)
-
 
     def rescale(self, size):
         self.__windowSize = size
         self.renderReady = True
-
 
     def clear(self):
         self.LabCanvas.delete("all")
@@ -110,17 +100,11 @@ class Graphics(tk.Frame):
     def draw(self):
         self.GUIcanvas.create_line(120, 0, 120, self.__windowSize[1], fill=colors.Gui_Line)
 
-
         start = (self.__padding, + self.__padding)
         end = (self.__windowSize[0] - self.__padding - self.__gui_padding, self.__windowSize[1] - self.__padding)
         canvas_size = (self.__windowSize[0] - 2 * self.__padding - self.__gui_padding, self.__windowSize[1] - 2 * self.__padding)
 
         self.LabCanvas.create_rectangle(start[0], start[1], end[0], end[1], fill=colors.bg)
-
-        #for lb in self.labyrinth:
-        #    for b in lb:
-        #        print(b, end=' ')
-        #    print()
 
         dx = canvas_size[0] / (len(self.labyrinth[0]))
         dy = canvas_size[1] / (len(self.labyrinth))
@@ -135,7 +119,6 @@ class Graphics(tk.Frame):
             for block in row:
                 if block != '█':
                     if mp_x > n_start[0] and mp_x < n_start[0] + dx and mp_y > n_start[1] and mp_y < n_start[1] + dy:
-                        #self.LabCanvas.create_rectangle(n_start[0], n_start[1], n_start[0] + dx, n_start[1] + dy, fill="#00ff00")
                         if self.guiHandler.get_picker_id() == 1:
                             self.gs_x = int(g_x)
                             self.gs_y = int(g_y)
@@ -145,7 +128,6 @@ class Graphics(tk.Frame):
                         if self.guiHandler.get_picker_id() == 3:
                             self.gp_x = int((mp_x - self.__padding) / dx - 1)
                             self.gp_y = int((mp_y - self.__padding) / dy - 1)
-
 
                     if block == 'x':
                         self.LabCanvas.create_rectangle(n_start[0], n_start[1], n_start[0] + dx, n_start[1] + dy,
@@ -213,12 +195,11 @@ class Graphics(tk.Frame):
                                             start[0] + dx * (point[0] + 2), start[1] + dy * (point[1] + 2),
                                             fill=colors.point, outline="")
 
-
     def display(self):
         self.GUIcanvas.place(x = 0, y = 0, width = 125, height = self.__windowSize[1])
         self.LabCanvas.place(x=125, y=0, width=self.__windowSize[0] - 125, height=self.__windowSize[1])
         self.renderReady = False
         self.guiHandler.updateWindow = False
 
-    def isRenderReady(self):
+    def is_render_ready(self):
         return self.renderReady or self.guiHandler.updateWindow or self.guiHandler.check_if_in_pick_mode()

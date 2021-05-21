@@ -11,7 +11,7 @@ class GuiHandler:
         self.columnEntry.insert(tk.END, "10")
 
         self.mesh_render_button = gfxGuis.mesh_render_button
-        self.mesh_render_button.configure(command =self.handleGeneratePress)
+        self.mesh_render_button.configure(command =self.handle_generate_mesh)
 
         self.start_picker_button_1 = gfxGuis.startButton
         self.start_picker_button_1.configure(command =self.handle_picker_1)
@@ -73,11 +73,11 @@ class GuiHandler:
             self.updateWindow = True
 
 
-    def getEntiresValues(self):
+    def get_entires_values(self):
         return (self.rowValue, self.columnValue)
 
-    def handleGeneratePress(self):
-        if self.validateEntries():
+    def handle_generate_mesh(self):
+        if self.validate_entries():
             self.rowValue = int(self.rowEntry.get())
             self.columnValue = int(self.columnEntry.get())
             self.gfx_handle.generator.set_up_generator(self.rowValue, self.columnValue)
@@ -93,7 +93,6 @@ class GuiHandler:
             self.gfx_handle.ge_y = -1
 
             self.updateWindow = True
-
 
     def handle_picker_1(self):
         self.pick_mode_1 = True
@@ -140,6 +139,7 @@ class GuiHandler:
 
     def handle_point(self):
         self.pick_mode_3 = True
+
     def handle_generate(self):
         self.gfx_handle.generator.clear()
         self.gfx_handle.generator.generate(self.gfx_handle.gs_x, self.gfx_handle.gs_y, self.gfx_handle.ge_x, self.gfx_handle.ge_y)
@@ -165,21 +165,21 @@ class GuiHandler:
         else:
             return 0
 
-    def validateEntries(self):
+    def validate_entries(self):
         def validate_1(entry):
-            EntryStr = entry.get()
-            EntryStr = EntryStr.strip()
-            if EntryStr.isdecimal():
-                val = int(EntryStr)
+            entry_str = entry.get()
+            entry_str = entry_str.strip()
+            if entry_str.isdecimal():
+                val = int(entry_str)
                 if val < 3 or val > 30:
                     entry.configure(bg='red')
                     entry.delete(0, tk.END)
-                    entry.insert(tk.END, EntryStr)
+                    entry.insert(tk.END, entry_str)
                     return False
 
                 entry.configure(bg='white')
                 entry.delete(0, tk.END)
-                entry.insert(tk.END, EntryStr)
+                entry.insert(tk.END, entry_str)
                 return True
 
             else:
@@ -197,7 +197,7 @@ class GuiHandler:
                 entry.insert(tk.END, EntryStr)
                 return False
 
-            valComp = self.getEntiresValues()
+            valComp = self.get_entires_values()
 
             for i in range(2):
                 numStr = spl[i].strip()

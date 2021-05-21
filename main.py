@@ -9,18 +9,18 @@ class App:
         self.graphics.guiHandler.bind_motion_for_root(self.window.get_window_root())
 
     def update(self):
-        if self.window.checkWindowResize():
-            self.graphics.rescale(self.window.getSize())
+        if self.window.check_window_resize():
+            self.graphics.rescale(self.window.get_size())
 
-        if self.graphics.isRenderReady():
+        if self.graphics.is_render_ready():
             self.graphics.clear()
             self.graphics.draw()
             self.graphics.display()
 
-        self.window.setUpdate(self.update, 60)
+        self.window.set_update(self.update, 60)
 
     def startLoop(self):
-        self.window.setUpdate(self.update, 60)
+        self.window.set_update(self.update, 60)
         self.window.loop()
 
 def main():

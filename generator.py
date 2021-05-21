@@ -8,6 +8,7 @@ class Generator:
         self.size_y = y
 
     def clear(self):
+        #Tworzy siatkę dla labiryntu
         r_x = self.size_x
         if r_x % 2 == 0:
             r_x += 1
@@ -85,6 +86,7 @@ class Generator:
         self.line_test(1 + s_x * 2, 1 + s_y * 2, 1 + e_x * 2, 1 + e_y * 2)
 
     def random_dir(self, x: int, y: int):
+        #wybiera lowoy kierunek
         # 1 - left, 2 -right, 3 - up, 4 - down
         dir = []
 
@@ -107,6 +109,7 @@ class Generator:
             return random.choice(dir)
 
     def line_test(self, s_x, s_y, e_x, e_y):
+        #testuje czy start nie łączy koniec linia prosta
         if s_x == e_x:
             if s_y > e_y:
                 for i in range(1, (s_y - e_y)):
