@@ -41,11 +41,12 @@ class Generator:
         pos_x = s_x
         pos_y = s_y
 
-        self.grid[pos_x][pos_x] = True
+        self.grid[pos_y][pos_x] = True
         self.stack.push(pos_x, pos_y)
         visited += 1
 
         while visited < x * y:
+
             direction = self.random_dir(pos_x, pos_y)
             while direction == 0 or (pos_x == e_x and pos_y == e_y):
                 pos = self.stack.pop()
