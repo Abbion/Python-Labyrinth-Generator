@@ -1,11 +1,13 @@
 
 class Mouse:
+    """ Klasa obsługująca myszkę"""
     def __init__(self):
         self.__x = 0
         self.__y = 0
         self.__lbDown = False
 
     def bind_mouse(self, window_root):
+        #Przypisuje eventy myszki do funkcji
         window_root.bind('<Motion>', self.__mouse_motion)
         window_root.bind('<Button-1>', self.__mouse_click)
         window_root.bind('<ButtonRelease-1>', self.__mouse_release)

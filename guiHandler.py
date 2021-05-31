@@ -2,13 +2,16 @@ import tkinter as tk
 import myException
 import myException as exc
 
+#Typy Eventów
 nullEvent = 0
 generateMeshEvent = 1
 solveEvent = 2
 generateLabyrinthEvent = 3
 
 class GuiHandler:
+    """Klasa do obsługi zdarzeń GUI"""
     def __init__(self, gfxGuis):
+        #Ustawienie reakcji na elementy GUI
         self.__rowEntry = gfxGuis.rowEntry
         self.__rowEntry.insert(tk.END, "10")
 
@@ -33,6 +36,7 @@ class GuiHandler:
         self.__point_button = gfxGuis.point_button
         self.__point_button.configure(command=self.__handle_picker_3)
 
+        #Wielkość początkowa labiryntu
         self.__rowValue = 10
         self.__columnValue = 10
 
@@ -47,8 +51,8 @@ class GuiHandler:
         self.__guiEvent = nullEvent
         return save_event
 
-
     def __handle_generate_mesh(self):
+        #Walidacja wartości i przygotowanie programu do dalszej pracy
         try:
             self.__validate_entries()
 
@@ -61,13 +65,12 @@ class GuiHandler:
             self.__guiEvent = generateMeshEvent
 
         except myException.Wrong_entry_exception as e:
+            #Wypisanie błędu
             print(e.message)
             if e.get_entry_id() == 1:
                 self.__rowEntry.configure(bg='red')
             elif e.get_entry_id() == 2:
                 self.__columnEntry.configure(bg='red')
-
-
 
     def __handle_solve(self):
         self.__solve_button.configure(state=tk.DISABLED)
@@ -116,7 +119,8 @@ class GuiHandler:
         validate_1(self.__columnEntry, 2)
 
     def set_generate_button(self, setter):
-        if setter == True:
+        #Blokuje lub odblokowuje dostęp do generowania
+        if setter:
             self.__generate_button.configure(state=tk.NORMAL)
         else:
             self.__generate_button.configure(state=tk.DISABLED)

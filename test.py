@@ -2,6 +2,7 @@ import generator as gen
 import pathFinder as pf
 
 def test():
+    """Klasa do testowania generowanego labiryntu"""
     g = gen.Generator()
     p = pf.PathFinder()
 
