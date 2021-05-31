@@ -3,6 +3,9 @@ import math
 import stack
 
 class PathFinder:
+    def __init__(self):
+        self.solved = []
+
     def find(self, s_x, s_y, e_x, e_y, labyrinth):
         self.solved = copy.deepcopy(labyrinth)
         x = s_x
@@ -68,7 +71,7 @@ class PathFinder:
         return dir
 
     def check_distance(self, x, y, e_x, e_y):
-        return abs(math.sqrt(e_x * e_x + e_y * e_y) - math.sqrt(x * x + y * y))
+        return abs(math.sqrt( (x - e_x) * (x - e_x) + (y - e_y) * (y - e_y)))
 
     def find_best_distance(self, dir, x, y, e_x, e_y):
         best_distance = []
@@ -79,8 +82,16 @@ class PathFinder:
 
         min = 0
         for i in range(len(best_distance)):
-            if best_distance[min] > best_distance[i]:
+            if best_distance[i] < best_distance[min]:
                 min = i
+
         return best_distance[min][1]
 
-
+    def merge_labyrinths_paths(self, lab_1, lab_2):
+        for i in range(len(lab_1)):
+            for j in range(len(lab_1[0])):
+                if lab_2[i][j] == 'o':
+                    lab_1[i][j] = 'o'
+                elif lab_2[i][j] == 'x' and lab_1[i][j] == ' ':
+                    lab_1[i][j] = 'x'
+        return lab_1

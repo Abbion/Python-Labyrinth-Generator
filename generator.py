@@ -17,15 +17,8 @@ class Generator:
         if r_y % 2 == 0:
             r_y += 1
 
-        self.labyrinth = []
-        for i in range(r_y):
-            row = []
-            for j in range(r_x):
-                if i % 2 == 0 or j % 2 == 0:
-                    row.append('█')
-                else:
-                    row.append(' ')
-            self.labyrinth.append(row)
+        self.labyrinth = [ ['█' for i in range(r_x)] if j % 2 == 0 else ['█' if i % 2 == 0 else ' ' for i in range(r_x)] for j in range(r_y)]
+        #LC
 
     def get_labyrinth(self):
         return self.labyrinth
@@ -36,7 +29,7 @@ class Generator:
         y = int(self.size_y / 2)
 
         self.bounds = (0, 0, x - 1, y - 1)
-        self.grid = [[False for i in range(x)] for j in range(y)]
+        self.grid = [[False for i in range(x)] for j in range(y)] #LC
         self.stack = stack.Stack()
 
         pos_x = s_x
@@ -46,46 +39,50 @@ class Generator:
         self.stack.push(pos_x, pos_y)
         visited += 1
 
+        #Do puki wszystkie punkty nie zostaną odwiedzone
         while visited < x * y:
-
-            direction = self.random_dir(pos_x, pos_y)
+            #wybierz kierunek
+            direction = self.__random_dir(pos_x, pos_y)
+            #Jeśli nie da się wybrać lub natrafiliśmy na punkt końcowy
             while direction == 0 or (pos_x == e_x and pos_y == e_y):
                 pos = self.stack.pop()
                 if len(pos) < 2:
                     break
                 pos_x, pos_y = pos
-                direction = self.random_dir(pos_x, pos_y)
+                direction = self.__random_dir(pos_x, pos_y)
 
+            #odkodowanie kierunku
             dir_x = 0
             dir_y = 0
 
-            if direction != 0:
-                if direction == 1:
-                    dir_x = -1
-                elif direction == 2:
-                    dir_x = 1
-                elif direction == 3:
-                    dir_y = -1
-                elif direction == 4:
-                    dir_y = 1
+            if direction == 1:
+                dir_x = -1
+            elif direction == 2:
+                dir_x = 1
+            elif direction == 3:
+                dir_y = -1
+            elif direction == 4:
+                dir_y = 1
 
-                new_x = pos_x + dir_x
-                new_y = pos_y + dir_y
+            new_x = pos_x + dir_x
+            new_y = pos_y + dir_y
 
-                self.grid[new_y][new_x] = True
-                self.stack.push(new_x, new_y)
-                visited += 1
+            self.grid[new_y][new_x] = True
+            self.stack.push(new_x, new_y)
+            visited += 1
 
-                self.labyrinth[1 + (pos_y * 2) + dir_y][1 + (pos_x * 2) + dir_x] = ' '
+            self.labyrinth[1 + (pos_y * 2) + dir_y][1 + (pos_x * 2) + dir_x] = ' '
 
-                pos_x = new_x
-                pos_y = new_y
+            pos_x = new_x
+            pos_y = new_y
 
+        #oznaczenie końca i początku labiryntu
         self.labyrinth[1 + s_y * 2][1 + s_x * 2] = 'S'
         self.labyrinth[1 + e_y * 2][1 + e_x * 2] = 'E'
-        self.line_test(1 + s_x * 2, 1 + s_y * 2, 1 + e_x * 2, 1 + e_y * 2)
+        #sprawdzenie czy linia prosta nie łączy wejścia i wyjścia
+        self.__line_test(1 + s_x * 2, 1 + s_y * 2, 1 + e_x * 2, 1 + e_y * 2)
 
-    def random_dir(self, x: int, y: int):
+    def __random_dir(self, x: int, y: int):
         #wybiera lowoy kierunek
         # 1 - left, 2 -right, 3 - up, 4 - down
         dir = []
@@ -108,9 +105,11 @@ class Generator:
         else:
             return random.choice(dir)
 
-    def line_test(self, s_x, s_y, e_x, e_y):
+    def __line_test(self, s_x, s_y, e_x, e_y):
         #testuje czy start nie łączy koniec linia prosta
+        #jeśli istnieje linia prosta na osi X
         if s_x == e_x:
+            #Jeśli start jest wyżej od końca
             if s_y > e_y:
                 for i in range(1, (s_y - e_y)):
                     if self.labyrinth[s_y - i][s_x] == '█':
@@ -127,7 +126,8 @@ class Generator:
                     self.labyrinth[e_y][e_x + 1] = ' '
                     return
 
-            if s_y < e_y:
+            #Jeśli start jest niżej od końca
+            else:
                 for i in range(1, (e_y - s_y)):
                     if self.labyrinth[s_y + i][s_x] == '█':
                         return
@@ -143,12 +143,15 @@ class Generator:
                     self.labyrinth[e_y][e_x - 1] = ' '
                     return
 
+        # jeśli istnieje linia prosta na osi Y
         elif s_y == e_y:
+            #jeśli start leży na prawo od końca
             if s_x > e_x:
                 for i in range(1, (s_x - e_x)):
                     if self.labyrinth[s_y][s_x - i] == '█':
                         return
                 self.labyrinth[s_y][e_x + 1] = '█'
+
                 if e_x > 1:
                     self.labyrinth[e_y][e_x - 1] = ' '
                     return
@@ -158,11 +161,13 @@ class Generator:
                 else:
                     self.labyrinth[e_y + 1][e_x] = ' '
                     return
+            #jeśli start leży na lewo od końca
             else:
                 for i in range(1, (e_x - s_x)):
                     if self.labyrinth[s_y][s_x + i] == '█':
                         return
                 self.labyrinth[s_y][e_x - 1] = '█'
+
                 if e_y > 1:
                     self.labyrinth[e_y - 1][e_x] = ' '
                     return

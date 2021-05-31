@@ -3,6 +3,7 @@ import guiHandler as gh
 import generator as gn
 import pathFinder as pf
 import colors
+import tile as tl
 
 class Graphics(tk.Frame):
     def __init__(self):
@@ -15,6 +16,8 @@ class Graphics(tk.Frame):
         self.__windowSize = (1000, 800)
         self.renderReady = True
 
+        self.__tile_info = []
+
         self.gs_x = -1
         self.gs_y = -1
 
@@ -25,16 +28,22 @@ class Graphics(tk.Frame):
         self.gp_y = -1
 
         self.__set_up_GUI()
+        self.__guiHandler = gh.GuiHandler(self)
+
         self.__labirynth_set_up()
 
         self.generator = gn.Generator()
-        self.generator.set_up_generator(self.guiHandler.rowValue, self.guiHandler.columnValue)
+        s_x, s_y = self.__guiHandler.get_labyrinth_size()
+        self.generator.set_up_generator(s_x, s_y)
         self.generator.clear()
 
         self.path_finder = pf.PathFinder()
 
         self.labyrinth = self.generator.get_labyrinth()
         self.points = []
+
+    def get_gui_handler(self):
+        return self.__guiHandler
 
     def __set_up_GUI(self):
         #Ustawienie GUI
@@ -84,10 +93,13 @@ class Graphics(tk.Frame):
         nextYpos += 2.4 * self.__GUIStep
         self.solve_button.place(x=10, y=nextYpos, height=40, width=80)
 
-        self.guiHandler = gh.GuiHandler(self)
+
 
     def __labirynth_set_up(self):
         self.LabCanvas = tk.Canvas(self, bd = 0)
+
+    def get_tile_info(self):
+        return self.__tile_info
 
     def rescale(self, size):
         self.__windowSize = size
@@ -97,7 +109,7 @@ class Graphics(tk.Frame):
         self.LabCanvas.delete("all")
         self.GUIcanvas.delete("all")
 
-    def draw(self):
+    def draw(self, lab_layout):
         self.GUIcanvas.create_line(120, 0, 120, self.__windowSize[1], fill=colors.Gui_Line)
 
         start = (self.__padding, + self.__padding)
@@ -106,11 +118,68 @@ class Graphics(tk.Frame):
 
         self.LabCanvas.create_rectangle(start[0], start[1], end[0], end[1], fill=colors.bg)
 
+        if len(lab_layout) > 1 and len(lab_layout[0]) > 1:
+            self.__tile_info = []
+            height_in_blocks = len(lab_layout)
+            width_in_blocks = len(lab_layout[0])
+
+            dx = canvas_size[0] / width_in_blocks
+            dy = canvas_size[1] / height_in_blocks
+
+            x_pos = start[0]
+            y_pos = start[1]
+            g_x = 0
+            g_y = 0
+
+            for row in lab_layout:
+                for tile in row:
+                    if tile != '█':
+                        if tile == ' ':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.fr, outline="")
+                        elif tile == '*':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.p_pick, outline="")
+
+                        elif tile == 'S':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.s_pick, outline="")
+
+                        elif tile == 'E':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.e_pick, outline="")
+
+                        elif tile == '%':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.p_pick, outline="")
+                        elif tile == 'o':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.correct_path, outline="")
+                        elif tile == 'x':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.wrong_path, outline="")
+                        elif tile == '@':
+                            self.LabCanvas.create_rectangle(x_pos, y_pos, x_pos + dx, y_pos + dy,
+                                                            fill=colors.point, outline="")
+
+                        self.__tile_info.append(tl.Tile(x_pos, y_pos, x_pos + dx, y_pos + dy, g_x, g_y))
+
+                    g_x += 1
+                    x_pos += dx
+
+                g_x = 0
+                x_pos = start[0]
+                g_y += 1
+                y_pos += dy
+
+
+        """
         dx = canvas_size[0] / (len(self.labyrinth[0]))
         dy = canvas_size[1] / (len(self.labyrinth))
 
         n_start = [start[0] + self.__gui_padding, start[1]]
 
+        
         mp_x, mp_y = self.guiHandler.get_mouse_pos()
         g_x = 0
         g_y = 0
@@ -194,12 +263,11 @@ class Graphics(tk.Frame):
             self.LabCanvas.create_rectangle(start[0] + dx * (point[0] + 1), start[1] + dy * (point[1] + 1),
                                             start[0] + dx * (point[0] + 2), start[1] + dy * (point[1] + 2),
                                             fill=colors.point, outline="")
-
+    """
     def display(self):
         self.GUIcanvas.place(x = 0, y = 0, width = 125, height = self.__windowSize[1])
         self.LabCanvas.place(x=125, y=0, width=self.__windowSize[0] - 125, height=self.__windowSize[1])
         self.renderReady = False
-        self.guiHandler.updateWindow = False
 
     def is_render_ready(self):
-        return self.renderReady or self.guiHandler.updateWindow or self.guiHandler.check_if_in_pick_mode()
+        return self.renderReady
