@@ -39,6 +39,10 @@ class LogicHandler:
         #Generuje labirynt
         self.__pp_x = 0
         self.__pp_y = 0
+        self.__ps_x = 0
+        self.__ps_y = 0
+        self.__pe_x = 0
+        self.__pe_y = 0
         self.__generator.clear()
 
         #Tu zamieniam koordynaty UI na koordynaty generatora
