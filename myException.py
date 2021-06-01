@@ -1,6 +1,6 @@
 
 
-class Wrong_entry_exception(Exception):
+class WrongEntryException(Exception):
     """Klasa wyjątku -> zwracany gdy wartość wpisana do komórki jset błędna"""
     def __init__(self, message, entry_id):
         self.__message = message

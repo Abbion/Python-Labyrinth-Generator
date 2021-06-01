@@ -64,9 +64,9 @@ class GuiHandler:
             self.__point_button.configure(state=tk.DISABLED)
             self.__guiEvent = generateMeshEvent
 
-        except myException.Wrong_entry_exception as e:
+        except myException.WrongEntryException as e:
             #Wypisanie błędu
-            print(e.message)
+            print(e)
             if e.get_entry_id() == 1:
                 self.__rowEntry.configure(bg='red')
             elif e.get_entry_id() == 2:
@@ -107,13 +107,13 @@ class GuiHandler:
             if entry_str.isdecimal():
                 val = int(entry_str)
                 if val < 3 or val > 30:
-                    raise exc.Wrong_entry_exception("wartość poza zakresem", entry_id)
+                    raise exc.WrongEntryException("wartość poza zakresem", entry_id)
 
                 entry.configure(bg='white')
                 entry.delete(0, tk.END)
                 entry.insert(tk.END, entry_str)
             else:
-                raise exc.Wrong_entry_exception("wartość nie jest liczbą", entry_id)
+                raise exc.WrongEntryException("wartość nie jest liczbą", entry_id)
 
         validate_1(self.__rowEntry, 1)
         validate_1(self.__columnEntry, 2)
