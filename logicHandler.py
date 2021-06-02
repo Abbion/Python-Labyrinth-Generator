@@ -74,10 +74,10 @@ class LogicHandler:
             lab_tmp[self.__points[0][0]][self.__points[0][1]] = 'x'
             lab_final = pathFinder.merge_labyrinths_paths(lab_final, lab_tmp)
 
-            for i in range(len(self.__points) - 2):
+            for i in range(0, len(self.__points) - 1):
                 lab_tmp = copy.deepcopy(clearLab)
                 lab_tmp[self.__points[i][0]][self.__points[i][1]] = 'S'
-                lab_tmp[self.__points[i + 1][0]][self.__points[1 + 1][1]] = 'E'
+                lab_tmp[self.__points[i + 1][0]][self.__points[i + 1][1]] = 'E'
                 lab_tmp = pathFinder.find(self.__points[i][1], self.__points[i][0], self.__points[i + 1][1], self.__points[i + 1][0], lab_tmp)
                 lab_final = pathFinder.merge_labyrinths_paths(lab_final, lab_tmp)
 
